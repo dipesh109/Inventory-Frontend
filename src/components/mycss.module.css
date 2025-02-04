@@ -1,0 +1,26 @@
+td,
+th {
+  padding: 10px;
+  text-align: left;
+}
+tr:hover {
+  background-color: #C1D2F8;
+  cursor: pointer; 
+  transform: scale(1.01);
+}
+.hovereffect:hover{
+  transform: scale(1.2);
+}
+.dashboard{
+    padding: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  
+  }
+
+.dashboard:hover{
+  background-color: aqua;
+
+
+}
+
