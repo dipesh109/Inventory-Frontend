@@ -8,6 +8,7 @@ import {
   CreditCard,
 } from "lucide-react";
 import userAvatar from "./pictures/hen.webp";
+import { backendUrl } from "../utils/config";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
@@ -15,7 +16,7 @@ const Profile = () => {
   const [error, setError] = useState("");
 
   // Replace with your actual backend API URL
-  const backendUrl = "http://localhost:8000/api/users/getuser";
+  // const backendUrl = "http://localhost:8000/api/users/getuser";
 
   useEffect(() => {
     const fetchUserProfile = async () => {
