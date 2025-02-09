@@ -49,8 +49,7 @@ const AddProduct = () => {
   return (
     <div style={styles.container}>
       <h2 style={styles.heading}>Add New Product</h2>
-      <form style={styles.form}
-       onSubmit={submitProduct}>
+      <form style={styles.form} onSubmit={submitProduct}>
         <div style={styles.formGroup}>
           <label style={styles.label}>Product Name</label>
           <input
@@ -75,7 +74,7 @@ const AddProduct = () => {
           />
         </div>
 
-        <div style={styles.formGroup}>
+        {/* <div style={styles.formGroup}>
           <label style={styles.label}>Product Category</label>
           <select
             type="text"
@@ -89,6 +88,18 @@ const AddProduct = () => {
             <option value="food">Food</option>
             <option value="beverages">Beverages</option>
           </select>
+        </div> */}
+
+        <div style={styles.formGroup}>
+          <label style={styles.label}>Category</label>
+          <input
+            type="text"
+            placeholder="Enter product Category"
+            name="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            style={styles.input}
+          />
         </div>
 
         <div style={styles.gridContainer}>

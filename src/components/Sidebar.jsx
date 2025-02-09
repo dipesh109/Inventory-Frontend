@@ -1,4 +1,4 @@
-import React, { useState, createContext } from "react";
+import React, { useState,useEffect, createContext } from "react";
 import {
   LayoutDashboard,
   PlusCircle,
@@ -58,17 +58,18 @@ const SidebarButton = ({ active, onClick, icon: Icon, label, color }) => (
 );
 
 const Sidebar = ({ setCurrentView, currentView }) => {
-  const [expanded, setExpanded] = useState(true);
-
-  
-
-  //handle logout user
-    // const [activeItem, setActiveItem] = useState("Dashboard");
+   const [expanded, setExpanded] = useState(true);
     const [cookies, setCookie, removeCookie] = useCookies(["token"]);
     const navigate = useNavigate();
-
+ 
+    //logout
     const handleLogout = async () => {
-      try {
+       try {
+    
+      const confirmLogout = window.confirm(
+        "Are you sure you want to log out ?"
+      )
+      if(confirmLogout){
         const response = await fetch("/api/users/logout", {
           method: "GET",
           credentials: "include",
@@ -80,17 +81,20 @@ const Sidebar = ({ setCurrentView, currentView }) => {
         } else {
           alert("Logout failed");
         }
-      } catch (error) {
+      }
+     } catch (error) {
         alert("An error occurred while logging out");
       }
     };
+
+  
 
 
   const menuItems = [
     { id: "dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { id: "add-product", icon: PlusCircle, label: "Add Product" },
-    { id: "accounts", icon: Users, label: "Accounts" },
-    { id: "report-bug", icon: Bug, label: "Report Bug" },
+    // { id: "accounts", icon: Users, label: "Accounts" },
+    // { id: "report-bug", icon: Bug, label: "Report Bug" },
   ];
 
   return (
@@ -210,7 +214,7 @@ const Sidebar = ({ setCurrentView, currentView }) => {
                   overflow: "hidden",
                 }}
               >
-                <div
+                {/* <div
                   style={{
                     fontWeight: "500",
                     color:
@@ -219,9 +223,9 @@ const Sidebar = ({ setCurrentView, currentView }) => {
                         : colors.text.primary,
                   }}
                 >
-                  Samrat
-                </div>
-                <div
+                  
+                </div> */}
+                {/* <div
                   style={{
                     fontSize: "12px",
                     color:
@@ -230,8 +234,8 @@ const Sidebar = ({ setCurrentView, currentView }) => {
                         : colors.text.secondary,
                   }}
                 >
-                  ksamratbikram@gmail.com
-                </div>
+                  ksamratbikram@gmai
+                </div> */}
               </div>
             )}
           </div>

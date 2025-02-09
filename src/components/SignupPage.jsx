@@ -3,13 +3,14 @@ import React, { useState,useEffect } from "react";
 import logo from "./pictures/original.webp";
 // import { registerUser } from "../api"; // Import the API function
 import { useCookies } from "react-cookie";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { makeUnauthenticatedPOSTRequest } from "../utils/serverhelper";
 
 const SignupPage = () => {
  const [name, setName] = useState("");
  const [email, setEmail] = useState("");
  const [password, setPassword] = useState("");
+ const [phone, setPhone] = useState("");
  const [cookies, setCookie] = useCookies(["token"]);
  const navigate = useNavigate();
 
@@ -22,7 +23,7 @@ const SignupPage = () => {
  const register = async (e) => {
    e.preventDefault(); // Prevent page refresh
 
-   const data = { name, email, password };
+   const data = { name, email, password,phone };
    try {
      const response = await makeUnauthenticatedPOSTRequest(
        "/api/users/register",
@@ -95,20 +96,20 @@ const SignupPage = () => {
             required
           />
         </div>
-        {/* <div style={styles.inputGroup}>
+        <div style={styles.inputGroup}>
           <label htmlFor="confirmPassword" style={styles.label}>
-            Confirm Password
+            Phone Number
           </label>
           <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm your password"
-            value={confirmPassword}
-            onChange={handleChange}
+            type="number"
+            name="phone"
+            placeholder="Enter your phone number"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
             style={styles.input}
             required
           />
-        </div> */}
+        </div>
         <button type="submit" style={styles.button}>
           Sign Up
         </button>

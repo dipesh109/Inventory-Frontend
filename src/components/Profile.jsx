@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Calendar,
   Mail,
@@ -8,25 +8,50 @@ import {
   CreditCard,
 } from "lucide-react";
 import userAvatar from "./pictures/hen.webp";
-const Profile = () => {
-  const userData = {
-    name: "Samrat",
-    email: "ksamratbikram@gmail.com",
-    joinDate: "January 15, 2024",
-    panNumber: "ABCDEFG",
-    contact: "+977 9869933294",
-    address: "Butwal-9, Rupandehi Nepal",
-    businessName: "Samrat Enterprises",
-  };
 
-  const handleEditProfile = () => {
-    console.log("Edit Profile clicked");
-    // Add edit profile logic here
-  };
+const Profile = () => {
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // Replace with your actual backend API URL
+  const backendUrl = "http://localhost:8000/api/users/getuser";
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await fetch(backendUrl, {
+          method: "GET",
+          credentials: "include", // Ensures cookies are sent with the request
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // If using JWT auth
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch profile data");
+        }
+
+        const data = await response.json();
+        setUserData(data);
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+        setError("Failed to load profile. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
+  // Show loading or error message
+  if (loading) return <p>Loading profile...</p>;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
-    <div style={{ minHeight: "100vh",marginLeft:"100px" }}>
-      {/* Header */}
+    <div style={{ minHeight: "100vh", marginLeft: "100px" }}>
       <h1
         style={{
           backgroundColor: "#f3f4f6",
@@ -40,7 +65,6 @@ const Profile = () => {
         My Profile
       </h1>
 
-      {/* Main Content */}
       <div
         style={{
           backgroundColor: "#fff",
@@ -50,7 +74,6 @@ const Profile = () => {
         }}
       >
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-          {/* Photo and Join Date */}
           <div
             style={{
               display: "flex",
@@ -59,53 +82,23 @@ const Profile = () => {
               gap: "16px",
             }}
           >
-            <div style={{ position: "relative" }}>
-              <div
-                style={{
-                  position: "absolute",
-                  inset: "0",
-                  backgroundColor: "#7c3aed",
-                  borderRadius: "50%",
-                  opacity: "0.1",
-                  animation: "pulse 2s infinite",
-                }}
-              ></div>
-              <img
-                src={userAvatar}
-                alt="Profile"
-                style={{
-                  borderRadius: "50%",
-                  width: "192px",
-                  height: "192px",
-                  objectFit: "cover",
-                  border: "4px solid white",
-                  boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: "8px",
-                  right: "8px",
-                  backgroundColor: "#7c3aed",
-                  width: "16px",
-                  height: "16px",
-                  borderRadius: "50%",
-                  border: "2px solid white",
-                }}
-              ></div>
-            </div>
-            <div>
-              <p
-                style={{
-                  fontSize: "20px",
-                  fontWeight: "700",
-                    color: "#111827",
-                }}
-              >
-                {userData.businessName}
-              </p>{" "}
-            </div>
+            <img
+              src={userAvatar} 
+              alt="Profile"
+              style={{
+                borderRadius: "50%",
+                width: "192px",
+                height: "192px",
+                objectFit: "cover",
+                border: "4px solid white",
+                boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+              }}
+            />
+            {/* <p
+              style={{ fontSize: "20px", fontWeight: "700", color: "#111827" }}
+            >
+              {userData.businessName}
+            </p> */}
 
             <div
               style={{
@@ -122,7 +115,7 @@ const Profile = () => {
                 style={{ width: "16px", height: "16px", color: "#7c3aed" }}
               />
               <span style={{ fontSize: "14px", color: "#4b5563" }}>
-                Joined {userData.joinDate}
+                {/* Joined {userDate} */}
               </span>
             </div>
           </div>
@@ -130,286 +123,97 @@ const Profile = () => {
           {/* Personal Details */}
           <div
             style={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-              gap: "24px",
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              gap: "16px",
             }}
           >
-            <div
+            <ProfileDetail
+              title="Full Name"
+              value={userData.name}
+              icon={<Building />}
+            />
+            {/* <ProfileDetail
+              title="Business Name"
+              value={userData.businessName}
+              icon={<Building />}
+            /> */}
+            {/* <ProfileDetail
+              title="Business PAN"
+              value={userData.panNumber}
+              icon={<CreditCard />}
+            /> */}
+            <ProfileDetail
+              title="Contact Number"
+              value={userData.phone}
+              icon={<Phone />}
+            />
+            <ProfileDetail
+              title="Email"
+              value={userData.email}
+              icon={<Mail />}
+            />
+            {/* <ProfileDetail
+              title="Address"
+              value={userData.address}
+              icon={<MapPin />}
+            /> */}
+          </div>
+
+          {/* Edit Profile Button */}
+          {/* <div style={{ paddingTop: "16px" }}>
+            <button
+              onClick={() => console.log("Edit Profile clicked")}
               style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                gap: "16px",
+                padding: "8px 16px",
+                backgroundColor: "#7c3aed",
+                color: "white",
+                borderRadius: "8px",
+                border: "none",
+                cursor: "pointer",
+                transition: "background-color 0.3s ease",
+                boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
               }}
             >
-              {/* Full Name */}
-              <div
-                style={{
-                  backgroundColor: "#f9fafb",
-                  padding: "16px",
-                  borderRadius: "8px",
-                  transition: "all 0.3s ease",
-                  cursor: "pointer",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    marginBottom: "8px",
-                  }}
-                >
-                  <Building
-                    style={{ width: "16px", height: "16px", color: "#7c3aed" }}
-                  />
-                  <h3
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: "500",
-                      color: "#6b7280",
-                    }}
-                  >
-                    Full Name
-                  </h3>
-                </div>
-                <p
-                  style={{
-                    fontSize: "18px",
-                    fontWeight: "600",
-                    color: "#111827",
-                  }}
-                >
-                  {userData.name}
-                </p>
-              </div>
-
-              {/* Business Name */}
-              <div
-                style={{
-                  backgroundColor: "#f9fafb",
-                  padding: "16px",
-                  borderRadius: "8px",
-                  transition: "all 0.3s ease",
-                  cursor: "pointer",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    marginBottom: "8px",
-                  }}
-                >
-                  <Building
-                    style={{ width: "16px", height: "16px", color: "#7c3aed" }}
-                  />
-                  <h3
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: "500",
-                      color: "#6b7280",
-                    }}
-                  >
-                    Business Name
-                  </h3>
-                </div>
-                <p
-                  style={{
-                    fontSize: "18px",
-                    fontWeight: "600",
-                    color: "#111827",
-                  }}
-                >
-                  {userData.businessName}
-                </p>
-              </div>
-
-              {/* Business PAN */}
-              <div
-                style={{
-                  backgroundColor: "#f9fafb",
-                  padding: "16px",
-                  borderRadius: "8px",
-                  transition: "all 0.3s ease",
-                  cursor: "pointer",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    marginBottom: "8px",
-                  }}
-                >
-                  <CreditCard
-                    style={{ width: "16px", height: "16px", color: "#7c3aed" }}
-                  />
-                  <h3
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: "500",
-                      color: "#6b7280",
-                    }}
-                  >
-                    Business PAN
-                  </h3>
-                </div>
-                <p
-                  style={{
-                    fontSize: "18px",
-                    fontFamily: "monospace",
-                    fontWeight: "600",
-                    color: "#111827",
-                  }}
-                >
-                  {userData.panNumber}
-                </p>
-              </div>
-
-              {/* Contact Number */}
-              <div
-                style={{
-                  backgroundColor: "#f9fafb",
-                  padding: "16px",
-                  borderRadius: "8px",
-                  transition: "all 0.3s ease",
-                  cursor: "pointer",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    marginBottom: "8px",
-                  }}
-                >
-                  <Phone
-                    style={{ width: "16px", height: "16px", color: "#7c3aed" }}
-                  />
-                  <h3
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: "500",
-                      color: "#6b7280",
-                    }}
-                  >
-                    Contact Number
-                  </h3>
-                </div>
-                <p style={{ fontSize: "18px", color: "#111827" }}>
-                  {userData.contact}
-                </p>
-              </div>
-
-              {/* Email */}
-              <div
-                style={{
-                  backgroundColor: "#f9fafb",
-                  padding: "16px",
-                  borderRadius: "8px",
-                  transition: "all 0.3s ease",
-                  cursor: "pointer",
-                  width: "100%",
-                  maxWidth: "400px",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    marginBottom: "8px",
-                  }}
-                >
-                  <Mail
-                    style={{ width: "16px", height: "16px", color: "#7c3aed" }}
-                  />
-                  <h3
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: "500",
-                      color: "#6b7280",
-                    }}
-                  >
-                    Email
-                  </h3>
-                </div>
-                <p
-                  style={{
-                    fontSize: "18px",
-                    color: "#111827",
-                  }}
-                >
-                  {userData.email}
-                </p>
-              </div>
-
-              {/* Address */}
-              <div
-                style={{
-                  backgroundColor: "#f9fafb",
-                  padding: "16px",
-                  borderRadius: "8px",
-                  transition: "all 0.3s ease",
-                  cursor: "pointer",
-                  gridColumn: "1 / -1",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    marginBottom: "8px",
-                  }}
-                >
-                  <MapPin
-                    style={{ width: "16px", height: "16px", color: "#7c3aed" }}
-                  />
-                  <h3
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: "500",
-                      color: "#6b7280",
-                    }}
-                  >
-                    Address
-                  </h3>
-                </div>
-                <p style={{ fontSize: "18px", color: "#111827" }}>
-                  {userData.address}
-                </p>
-              </div>
-            </div>
-
-            {/* Edit Button */}
-            <div style={{ paddingTop: "16px" }}>
-              <button
-                onClick={handleEditProfile}
-                style={{
-                  padding: "8px 16px",
-                  backgroundColor: "#7c3aed",
-                  color: "white",
-                  borderRadius: "8px",
-                  border: "none",
-                  cursor: "pointer",
-                  transition: "background-color 0.3s ease",
-                  boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-                }}
-              >
-                Edit Profile
-              </button>
-            </div>
-          </div>
+              Edit Profile
+            </button>
+          </div> */}
         </div>
       </div>
     </div>
   );
 };
+
+// Reusable Component for Profile Details
+const ProfileDetail = ({ title, value, icon }) => (
+  <div
+    style={{
+      backgroundColor: "#f9fafb",
+      padding: "16px",
+      borderRadius: "8px",
+      transition: "all 0.3s ease",
+      cursor: "pointer",
+    }}
+  >
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "8px",
+        marginBottom: "8px",
+      }}
+    >
+      {React.cloneElement(icon, {
+        style: { width: "16px", height: "16px", color: "#7c3aed" },
+      })}
+      <h3 style={{ fontSize: "14px", fontWeight: "500", color: "#6b7280" }}>
+        {title}
+      </h3>
+    </div>
+    <p style={{ fontSize: "18px", fontWeight: "600", color: "#111827" }}>
+      {value}
+    </p>
+  </div>
+);
 
 export default Profile;

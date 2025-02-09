@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import AddProduct from "./AddProduct";
-import Accounts from "./Account";
-import Reportbug from "./ReportBug";
+// import Accounts from "./Account";
+// import Reportbug from "./ReportBug";
 import Profile from "./Profile";
 import { makeAuthenticatedGETRequest } from "../utils/serverhelper";
 import {
@@ -89,17 +89,17 @@ const Dashboard = () => {
   }, []);
   console.log(brands);
 
-   const totalValue = Array.isArray(brands)
+  const totalValue = Array.isArray(brands)
     ? brands.reduce((acc, item) => acc + item.price * item.quantity, 0)
     : 0;
   // eslint-disable-next-line no-undef
- const outOfStock = Array.isArray(brands)
-   ? brands.filter((item) => item.quantity <= 0).length
-   : 0;
+  const outOfStock = Array.isArray(brands)
+    ? brands.filter((item) => item.quantity <= 0).length
+    : 0;
 
- const categories = Array.isArray(brands)
-   ? new Set(brands.map((item) => item.category)).size
-   : 0;
+  const categories = Array.isArray(brands)
+    ? new Set(brands.map((item) => item.category)).size
+    : 0;
 
   const handleEdit = (index) => {
     const product = brands[index];
@@ -112,6 +112,11 @@ const Dashboard = () => {
   };
 
   const handleSave = async (index) => {
+    //  try {
+    
+    //   const confirmDelete = window.confirm(
+    //     "Are you sure you want to delete this product?"
+    //   );
     // const product = brands[index];
     const updatedProduct = {
       ...brands[index],
@@ -156,7 +161,12 @@ const Dashboard = () => {
   };
 
   const handleDelete = async (id) => {
-    try {
+     try {
+    
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this product?"
+      );
+     if(confirmDelete){
       const response = await fetch(`${backendUrl}/api/products/${id}`, {
         method: "DELETE",
         credentials: "include",
@@ -172,15 +182,14 @@ const Dashboard = () => {
 
       console.log("Product deleted successfully");
       setBrands((prevBrands) => prevBrands.filter((item) => item._id !== id));
-    } catch (error) {
+    } } catch (error) {
       console.error("Error deleting product:", error.message);
     }
   };
 
- const currentItems = Array.isArray(brands)
-   ? brands.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-   : [];
-
+  const currentItems = Array.isArray(brands)
+    ? brands.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+    : [];
 
   return (
     <>
@@ -457,10 +466,10 @@ const Warehouse = () => {
         return <Dashboard />;
       case "add-product":
         return <AddProduct />;
-      case "accounts":
-        return <Accounts />;
-      case "report-bug":
-        return <Reportbug />;
+      // case "accounts":
+      //   return <Accounts />;
+      // case "report-bug":
+      //   return <Reportbug />;
       case "myprofile":
         return <Profile />;
       default:
