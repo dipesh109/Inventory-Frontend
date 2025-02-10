@@ -2,7 +2,7 @@ import { backendUrl } from "./config";
 
 export const makeUnauthenticatedPOSTRequest = async (route, body) => {
   // console.log(route);
-  const response = await fetch("https://inventorybackend-8io4.onrender.com", {
+  const response = await fetch("https://inventorybackend-8io4.onrender.com/",{
     method: "POST",
     headers: {
       "Content-Type": "application/json",
