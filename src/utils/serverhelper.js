@@ -3,9 +3,10 @@ import { backendUrl } from "./config";
 export const makeUnauthenticatedPOSTRequest = async (route, body) => {
   // console.log(route);
   const response = await fetch(
-    "https://inventorybackend-8io4.onrender.com/api/users/login" + route,
+    backendUrl + route,
     {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -45,15 +46,19 @@ export const makeAuthenticatedPOSTRequest = async (route, body) => {
 
 
 export const makeAuthenticatedGETRequest = async (route) => {
+  // console.log(route)
   // const token = getToken();
-  const response = await fetch(backendUrl + route, {
-    method: "GET",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      // Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await fetch(
+    backendUrl + route,
+    {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        // Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   const formattedResponse = await response.json();
   return formattedResponse;
 };

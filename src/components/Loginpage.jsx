@@ -23,7 +23,7 @@ const Loginpage = () => {
     const data = { email, password };
     try {
       const response = await makeUnauthenticatedPOSTRequest(
-        // "/api/users/login",
+        "/api/users/login",
         data
       );
       if (response && response.token) {

@@ -9,7 +9,7 @@ import {
   ChevronLast,
 } from "lucide-react";
 
-import logo from "./pictures/original.webp";
+import logo from "./pictures/inven3.png";
 import userAvatar from "./pictures/hen.webp";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";

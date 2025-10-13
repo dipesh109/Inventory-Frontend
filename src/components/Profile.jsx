@@ -21,7 +21,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch(backendUrl, {
+        const response = await fetch(`${backendUrl}/api/users/getuser`, {
           method: "GET",
           credentials: "include", // Ensures cookies are sent with the request
           headers: {
@@ -84,7 +84,7 @@ const Profile = () => {
             }}
           >
             <img
-              src={userAvatar} 
+              src={userAvatar}
               alt="Profile"
               style={{
                 borderRadius: "50%",

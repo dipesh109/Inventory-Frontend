@@ -78,7 +78,7 @@ const Dashboard = () => {
     const fetchProducts = async () => {
       try {
         const products = await makeAuthenticatedGETRequest("/api/products");
-        console.log("Fetched Products:", products); // Debugging
+        // console.log("Fetched Products:", products); // Debugging
         setBrands(products);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -87,7 +87,7 @@ const Dashboard = () => {
 
     fetchProducts();
   }, []);
-  console.log(brands);
+  // console.log(brands);
 
   const totalValue = Array.isArray(brands)
     ? brands.reduce((acc, item) => acc + item.price * item.quantity, 0)
@@ -103,23 +103,27 @@ const Dashboard = () => {
 
   const handleEdit = (index) => {
     const product = brands[index];
+    // console.log("Editing Product:", product);
     // setTempName(product.name);
     // setTempCategory(product.category);
-    setTempPrice(product.price);
-    setTempQuantity(product.quantity);
+    setTempPrice(product.price );
+    setTempQuantity(product.quantity );
     // setTempDescription(product.description);
     setEditingIndex(index);
   };
 
   const handleSave = async (index) => {
     //  try {
-    
+
     //   const confirmDelete = window.confirm(
     //     "Are you sure you want to delete this product?"
     //   );
     // const product = brands[index];
+    // console.log("Saving Product:", { tempPrice, tempQuantity });
+
     const updatedProduct = {
       ...brands[index],
+      
       // name: tempName,
       // category: tempCategory,
       price: tempPrice,
@@ -155,34 +159,35 @@ const Dashboard = () => {
       setEditingIndex(null);
       setTempPrice(0);
       setTempQuantity(0);
+      
     } catch (error) {
       console.error("Error updating product:", error);
     }
   };
 
   const handleDelete = async (id) => {
-     try {
-    
+    try {
       const confirmDelete = window.confirm(
         "Are you sure you want to delete this product?"
       );
-     if(confirmDelete){
-      const response = await fetch(`${backendUrl}/api/products/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      if (confirmDelete) {
+        const response = await fetch(`${backendUrl}/api/products/${id}`, {
+          method: "DELETE",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || `Error ${response.status}`);
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || `Error ${response.status}`);
+        }
+
+        console.log("Product deleted successfully");
+        setBrands((prevBrands) => prevBrands.filter((item) => item._id !== id));
       }
-
-      console.log("Product deleted successfully");
-      setBrands((prevBrands) => prevBrands.filter((item) => item._id !== id));
-    } } catch (error) {
+    } catch (error) {
       console.error("Error deleting product:", error.message);
     }
   };
