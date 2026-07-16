@@ -1,1 +1,1 @@
-export const backendUrl = "https://backend1-steel.vercel.app/";
+export const backendUrl = "https://inventory-qbqy.onrender.com";
