@@ -1,9 +1,8 @@
-import React, { useState,useEffect, createContext } from "react";
+import React, { useState, createContext } from "react";
 import {
   LayoutDashboard,
   PlusCircle,
-  Users,
-  Bug,
+ 
   LogOut,
   ChevronFirst,
   ChevronLast,
@@ -13,6 +12,7 @@ import logo from "./pictures/inven3.png";
 import userAvatar from "./pictures/hen.webp";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import { backendUrl } from "../utils/config";
 
 const SidebarContext = createContext();
 
@@ -59,7 +59,7 @@ const SidebarButton = ({ active, onClick, icon: Icon, label, color }) => (
 
 const Sidebar = ({ setCurrentView, currentView }) => {
    const [expanded, setExpanded] = useState(true);
-    const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+    const [, , removeCookie] = useCookies(["token"]);
     const navigate = useNavigate();
  
     //logout
@@ -70,7 +70,11 @@ const Sidebar = ({ setCurrentView, currentView }) => {
         "Are you sure you want to log out ?"
       )
       if(confirmLogout){
-        const response = await fetch("/api/users/logout", {
+        // const response = await fetch("/api/users/logout", {
+        //   method: "GET",
+        //   credentials: "include",
+        // });
+       const response = await fetch(`${backendUrl}/api/users/logout`, {
           method: "GET",
           credentials: "include",
         });

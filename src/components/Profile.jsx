@@ -3,9 +3,9 @@ import {
   Calendar,
   Mail,
   Phone,
-  MapPin,
+
   Building,
-  CreditCard,
+  
 } from "lucide-react";
 import userAvatar from "./pictures/hen.webp";
 import { backendUrl } from "../utils/config";

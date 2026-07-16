@@ -148,7 +148,7 @@ const Dashboard = () => {
         throw new Error("Failed to update product");
       }
 
-      const updatedData = await response.json();
+      // const updatedData = await response.json();
 
       setBrands((prevBrands) => {
         return prevBrands.map((item, i) =>
